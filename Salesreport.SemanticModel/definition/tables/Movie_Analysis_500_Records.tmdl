@@ -1,6 +1,10 @@
 table Movie_Analysis_500_Records
 	lineageTag: 91bfdfcc-8b03-4117-91af-95994ecc2349
 
+	measure 'Total Orders' = DISTINCTCOUNT(Orders[Order ID])
+		formatString: 0
+		lineageTag: 5059b1a0-ef08-466c-81ff-86183307effe
+
 	column Movie_ID
 		dataType: string
 		lineageTag: a722695c-380b-425a-afbc-9ffdeac3fcfb
