@@ -1,0 +1,15 @@
+relationship 7a8eb621-7002-478d-a13f-dc3c5ea23bde
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Orders.'Order Date'
+	toColumn: LocalDateTable_9e8ce88a-9935-4b31-8556-9106e7e60f77.Date
+
+relationship d13a96e8-9335-4469-b431-6f34a478ec3f
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Orders.'Ship Date'
+	toColumn: LocalDateTable_707b07cf-958a-48e1-8b33-86844bcbeccc.Date
+
+relationship 889b33e0-7373-42f0-b823-605a8a902452
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Movie_Analysis_500_Records.Release_Date
+	toColumn: LocalDateTable_3b77b4a2-2d45-45c4-acef-b536c1fe1ef2.Date
+

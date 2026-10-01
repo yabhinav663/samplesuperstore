@@ -1,0 +1,173 @@
+table Movie_Analysis_500_Records
+	lineageTag: 91bfdfcc-8b03-4117-91af-95994ecc2349
+
+	column Movie_ID
+		dataType: string
+		lineageTag: a722695c-380b-425a-afbc-9ffdeac3fcfb
+		summarizeBy: none
+		sourceColumn: Movie_ID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Movie_Name
+		dataType: string
+		lineageTag: 2b6b045a-c36e-41cb-bf93-9b230745284b
+		summarizeBy: none
+		sourceColumn: Movie_Name
+
+		annotation SummarizationSetBy = Automatic
+
+	column Release_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d514bf4e-6e45-4b4b-9653-8f4f863090cc
+		summarizeBy: none
+		sourceColumn: Release_Date
+
+		variation Variation
+			isDefault
+			relationship: 889b33e0-7373-42f0-b823-605a8a902452
+			defaultHierarchy: LocalDateTable_3b77b4a2-2d45-45c4-acef-b536c1fe1ef2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Genre
+		dataType: string
+		lineageTag: 6940ab93-a1bd-47ce-9347-b809dcaf1e14
+		summarizeBy: none
+		sourceColumn: Genre
+
+		annotation SummarizationSetBy = Automatic
+
+	column Language
+		dataType: string
+		lineageTag: f6262d43-7cf4-46f6-8a13-a5bbf9c73d74
+		summarizeBy: none
+		sourceColumn: Language
+
+		annotation SummarizationSetBy = Automatic
+
+	column Director
+		dataType: string
+		lineageTag: 54333017-c1e1-4b06-8ff8-0bc893f52ef8
+		summarizeBy: none
+		sourceColumn: Director
+
+		annotation SummarizationSetBy = Automatic
+
+	column Production_House
+		dataType: string
+		lineageTag: 84f16761-4c02-4adb-a016-f5d3190b20db
+		summarizeBy: none
+		sourceColumn: Production_House
+
+		annotation SummarizationSetBy = Automatic
+
+	column Budget
+		dataType: double
+		lineageTag: c16a185d-7b92-4830-bb19-44360335e3ed
+		summarizeBy: sum
+		sourceColumn: Budget
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Box_Office_Collection
+		dataType: double
+		lineageTag: 829ed1b7-4356-4ede-bb58-90616075113a
+		summarizeBy: sum
+		sourceColumn: Box_Office_Collection
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Rating
+		dataType: double
+		lineageTag: 41c4f9b2-27aa-43bc-b0fb-47f1c280c3f3
+		summarizeBy: sum
+		sourceColumn: Rating
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Votes
+		dataType: int64
+		formatString: 0
+		lineageTag: 71be16c3-33c9-42b7-b94b-215d112e32ff
+		summarizeBy: sum
+		sourceColumn: Votes
+
+		annotation SummarizationSetBy = Automatic
+
+	column Runtime_Minutes
+		dataType: int64
+		formatString: 0
+		lineageTag: 4b860197-df3f-4682-b38f-b51b59416732
+		summarizeBy: sum
+		sourceColumn: Runtime_Minutes
+
+		annotation SummarizationSetBy = Automatic
+
+	column OTT_Platform
+		dataType: string
+		lineageTag: 353c20e4-8b9e-44f6-ab8f-82ed1940a04f
+		summarizeBy: none
+		sourceColumn: OTT_Platform
+
+		annotation SummarizationSetBy = Automatic
+
+	column Country
+		dataType: string
+		lineageTag: eae5e2a7-3ce3-4a24-873c-30291ea534c6
+		summarizeBy: none
+		sourceColumn: Country
+
+		annotation SummarizationSetBy = Automatic
+
+	column Movie_Year
+		dataType: int64
+		formatString: 0
+		lineageTag: d4e3d12e-6ae1-431a-abc6-afa8825af6ff
+		summarizeBy: sum
+		sourceColumn: Movie_Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rating_Category
+		dataType: string
+		lineageTag: e4bbc8ae-c3e6-4b6d-b45a-0cad8c1ac636
+		summarizeBy: none
+		sourceColumn: Rating_Category
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Movie_Analysis_500_Records = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\Docker\Documents\Movie Analysis\Movie_Analysis_500_Records.csv"),[Delimiter=",", Columns=14, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Movie_ID", type text}, {"Movie_Name", type text}, {"Release_Date", type date}, {"Genre", type text}, {"Language", type text}, {"Director", type text}, {"Production_House", type text}, {"Budget", type number}, {"Box_Office", type number}, {"Rating", type number}, {"Votes", Int64.Type}, {"Runtime_Minutes", Int64.Type}, {"OTT_Platform", type text}, {"Country", type text}}),
+				    #"Removed Duplicates" = Table.Distinct(#"Changed Type", {"Movie_ID"}),
+				    #"Removed Blank Rows" = Table.SelectRows(#"Removed Duplicates", each not List.IsEmpty(List.RemoveMatchingItems(Record.FieldValues(_), {"", null}))),
+				    #"Replaced Value" = Table.ReplaceValue(#"Removed Blank Rows",""" ""","Not Available",Replacer.ReplaceText,{"OTT_Platform"}),
+				    #"Trimmed Text" = Table.TransformColumns(#"Replaced Value",{{"Movie_Name", Text.Trim, type text}}),
+				    #"Cleaned Text" = Table.TransformColumns(#"Trimmed Text",{{"Genre", Text.Clean, type text}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Cleaned Text",{{"Box_Office", "Box_Office_Collection"}}),
+				    #"Sorted Rows" = Table.Sort(#"Renamed Columns",{{"Release_Date", Order.Descending}}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Sorted Rows", "Release_Date", "Release_Date - Copy"),
+				    #"Extracted Year" = Table.TransformColumns(#"Duplicated Column",{{"Release_Date - Copy", Date.Year, Int64.Type}}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Extracted Year",{{"Release_Date - Copy", "Movie_Year"}}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Renamed Columns1", "Rating_Category", each if [Rating] >= 8 then """Excellent""" else if [Rating] >= 7 then """Good""" else """Average""")
+				in
+				    #"Added Conditional Column"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

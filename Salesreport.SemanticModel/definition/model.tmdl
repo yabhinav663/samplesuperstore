@@ -1,0 +1,24 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	valueFilterBehavior: independent
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["Movie_Analysis_500_Records","Orders"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Orders
+ref table DateTableTemplate_6f8babc1-7841-4c18-aa7b-ae90b650e185
+ref table LocalDateTable_9e8ce88a-9935-4b31-8556-9106e7e60f77
+ref table LocalDateTable_707b07cf-958a-48e1-8b33-86844bcbeccc
+ref table Movie_Analysis_500_Records
+ref table LocalDateTable_3b77b4a2-2d45-45c4-acef-b536c1fe1ef2
+
+ref cultureInfo en-US
+
